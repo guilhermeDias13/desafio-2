@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>DNC Weather</title>
+  </head>
+
+  <body>
+    <nav id="superior">
+      <div id="menu">
+        <a href=""><strong>DncWeather</strong></a>
+      </div>
+      <div class="linkAncora">
+        <ul>
+          <li><a href="#loc">Endereços</a></li>
+          <li><a href="#weather">Previsão do tempo </a></li>
+        </ul>
+      </div>
+    </nav>
+    <section>
+      <header>
+        <div class="container">
+          <h1>
+            <p>Descubra Mais com Precisão:</p>
+            <p>Previsões do Tempo e endereços</p>
+            <p>em tempo real.</p>
+          </h1>
+          <img id="sunCloud" src="sun&Cloud.svg" width="150px" alt="" />
+        </div>
+      </header>
+      <div id="forms">
+        <form>
+          <div class="formGroup">
+            <label>Primeiro nome:</label>
+            <input type="text" placeholder="Insira seu primeiro nome:" />
+          </div>
+          <div class="formGroup">
+            <label>E-mail:</label>
+            <input type="email" placeholder="Insira seu e-mail" />
+          </div>
+          <div class="formGroup">
+            <label>Digite o CEP:</label>
+            <input type="number" id="cep" placeholder="Insira o CEP" />
+          </div>
+          <div class="formGroup">
+            <label>Digite a latitude e longitude para saber a previsão:</label>
+          </div>
+          <div class="formGroup">
+            <input type="text" id="latitude" placeholder="Latitude" />
+            <input type="text" id="longitude" placeholder="Longitude" />
+          </div>
+          <button type="button" onclick="consultarApis()">Acessar</button>
+        </form>
+      </div>
+    </section>
+    <div id="loc">
+      <h1>
+        Resultado da busca por CEP:
+        <img src="locPoint.svg" width="15%" alt="Erro ao carregar imagem" />
+      </h1>
+    </div>
+    <div id="ctnLoc">
+      <div id="ctnHeader">
+        <h1>Logradouro/nome</h1>
+        <h1>Bairro/Distrito</h1>
+        <h1>Localidade/UF</h1>
+      </div>
+      <div id="ctnResult">
+        <!-- <h1 id="logradouro">Logradouro/nome</h1>
+        <h1 id="distrito">Bairro/Distrito</h1>
+        <h1 id="UF">Localidade/UF</h1> -->
+      </div>
+    </div>
+    <div id="weather">
+      <h1>
+        Previsão do tempo na região:
+        <img src="cloud.svg" width="15%" alt="Erro ao carregar imagem" />
+      </h1>
+    </div>
+    <div id="weatherCtn">
+      <h1>Previsão de tempo de acordo a região: °C</h1>
+    </div>
+    <footer>
+      <h2>Termos de Uso | Política de Privacidade</h2>
+    </footer>
+  </body>
+
+  <script>
+    function consultarApis() {
+      consultaEndereco();
+      consultaTemperatura();
+    }
+
+    function consultaEndereco() {
+      let cep = document.querySelector("#cep").value;
+
+      if (cep.length !== 8) {
+        alert("CEP Inválido!");
+        return;
+      }
+
+      let url = `https://viacep.com.br/ws/${cep}/json/`;
+
+      fetch(url).then(function (response) {
+        response.json().then(mostrarEndereco);
+      });
+    }
+
+    function mostrarEndereco(dados) {
+      let ctnResult = document.querySelector("#ctnResult");
+      if (dados.erro) {
+        ctnResult.innerHTML = "Não foi possível localizar endereço!";
+      } else {
+        ctnResult.innerHTML = `<h1> ${dados.logradouro}</h1>
+                               <h1> ${dados.bairro}</h1>
+                               <h1> ${dados.uf}</h1>`;
+      }
+    }
+
+    function consultaTemperatura() {
+      let latitude = document.querySelector("#latitude").value;
+      let longitude = document.querySelector("#longitude").value;
+
+      if (!latitude || !longitude) {
+        alert("Latitude e Longitude são obrigatórios!");
+        return;
+      }
+
+      let url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&current_weather=true`;
+
+      fetch(url).then(function (response) {
+        response.json().then(mostrarTemperatura);
+      });
+    }
+
+    function mostrarTemperatura(dados) {
+      let weatherCtn = document.querySelector("#weatherCtn");
+      if (dados.error) {
+        weatherCtn.innerHTML = "Não foi possível obter a temperatura!";
+      } else {
+        let temperatura = dados.current_weather.temperature;
+        weatherCtn.innerHTML = `<h1>Previsão de tempo de acordo com a sua região: ${temperatura}°C</h1>`;
+      }
+    }
+  </script>
+</html>
