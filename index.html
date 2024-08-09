@@ -40,11 +40,11 @@
         <form>
           <div class="formGroup">
             <label>Primeiro nome:</label>
-            <input type="text" placeholder="Insira seu primeiro nome:" />
+            <input type="text" name="name" placeholder="Insira seu primeiro nome:" />
           </div>
           <div class="formGroup">
             <label>E-mail:</label>
-            <input type="email" placeholder="Insira seu e-mail" />
+            <input type="email" name="email" placeholder="Insira seu e-mail" />
           </div>
           <div class="formGroup">
             <label>Digite o CEP:</label>
@@ -54,8 +54,8 @@
             <label>Digite a latitude e longitude para saber a previsão:</label>
           </div>
           <div class="formGroup">
-            <input type="text" id="latitude" placeholder="Latitude" />
-            <input type="text" id="longitude" placeholder="Longitude" />
+            <input type="text" id="latitude" name="latitude" placeholder="Latitude" />
+            <input type="text" id="longitude" name="longitude" placeholder="Longitude" />
           </div>
           <button type="button" onclick="consultarApis()">Acessar</button>
         </form>
